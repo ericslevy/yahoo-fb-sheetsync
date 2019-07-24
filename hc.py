@@ -14,6 +14,7 @@ import tempfile
 from contextlib import contextmanager
 from datetime import date, timedelta
 
+
 @contextmanager
 def tempinput(data):
     temp = tempfile.NamedTemporaryFile(delete=False, mode='wt')
@@ -30,11 +31,12 @@ class YahooFantasyAPI:
     
     
     def fetchLeague(self):
+        league_id = os.environ.get('league_id')
         tomorrow = str(date.today() + timedelta(days=1))
         print(tomorrow)
         session = self.getSession()
         r = session.get(
-        'https://fantasysports.yahooapis.com/fantasy/v2/league/mlb.l.23884/teams/roster;date=' + tomorrow + '/players'
+        'https://fantasysports.yahooapis.com/fantasy/v2/league/mlb.l.' + league_id) + '/teams/roster;date=' + tomorrow + '/players'
         )
         
         return r
@@ -357,7 +359,7 @@ for email in team_email_list:
     
    
     
-with tempinput(os.environ.get('dynasty_secret'                                    )) as tempfile:
+with tempinput(os.environ.get('dynasty_secret')) as tempfile:
     gc = pygsheets.authorize(service_file=tempfile)  
 
 sheet = gc.open('Hobochat Dynasty League Rosters')
