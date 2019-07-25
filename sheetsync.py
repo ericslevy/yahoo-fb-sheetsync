@@ -361,7 +361,7 @@ with tempinput(os.environ.get('dynasty_secret')) as tempfile:
 
 sheet = gc.open(os.environ.get('google_sheet_name'))
 wks = sheet.worksheet('title', 'Current Rosters')
-if useminors:
+if args.useminors:
     hidden_wks = sheet.worksheet('title', 'Hidden Sheet')
 
 
@@ -378,7 +378,7 @@ wks.update_values(crange = teamrange, values = [teamfill])
 wks.update_values(crange = emailrange, values = [emailfill])
 gc.sheet.batch_update(sheet.id, mergelist)
 
-if useminors:
+if args.useminors:
     position_column = ['C','1B','2B','3B','SS','OF','Util','SP', 'RP','MiLB']
 else:
     position_column = ['C','1B','2B','3B','SS','OF','Util','SP', 'RP']
@@ -455,7 +455,7 @@ starter_list = []
 
 updated_playerlist = []
 
-if useminors:
+if args.useminors:
     minor_league_fillins = hidden_wks.cell('A26').value
 for player in playerlist:    
     playername = player[2]
@@ -521,7 +521,7 @@ for id in team_idlist:
                 json = dl_na_json[teampos]
                 gc.sheet.batch_update(sheet.id, json)
                 time.sleep(1.1)
-            if useminors:
+            if args.useminors:
                 if position == 'MiLB':
                     mcol = convertToColumn(int(id))
                     mcell = mcol + str(2)           
