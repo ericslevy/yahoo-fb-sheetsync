@@ -13,7 +13,9 @@ This script requires a few enviromental variables.  Since this is designed for H
 Currently, the variables needed are:
 
 dynasty_secret: A JSON [Google Sheets API OAuth token](https://developers.google.com/sheets/api/guides/authorizing)
+
 league_id: a numeric league id obtained from the URL of any league page
+
 oauth2_file: A JSON [Yahoo Developer Network API Oauth token](https://developer.yahoo.com/apps/)
 
 ## Authors
