@@ -1,2 +1,2 @@
 web: python server.py
-worker: python hc.py
+worker: python sheetsync.py -m

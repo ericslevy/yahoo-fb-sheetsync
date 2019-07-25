@@ -25,18 +25,15 @@ def tempinput(data):
     finally:
         os.unlink(temp.name)
 
-
-
 class YahooFantasyAPI:
     
     
     def fetchLeague(self):
         league_id = os.environ.get('league_id')
         tomorrow = str(date.today() + timedelta(days=1))
-        print(tomorrow)
         session = self.getSession()
         r = session.get(
-        'https://fantasysports.yahooapis.com/fantasy/v2/league/mlb.l.' + league_id) + '/teams/roster;date=' + tomorrow + '/players'
+        'https://fantasysports.yahooapis.com/fantasy/v2/league/mlb.l.' + league_id + '/teams/roster;date=' + tomorrow + '/players'
         )
         
         return r
@@ -44,7 +41,6 @@ class YahooFantasyAPI:
 
     def getSession(self):
         data = os.environ.get('oauth2_file')
-        print(data)
         with tempinput(data) as tempfilename:   
             oauth = OAuth2(None, None, from_file=tempfilename)
 
@@ -163,7 +159,7 @@ def grayformat(sheetId, team_id, cols):
             },
             }
 
-def dl_na_formatter(player, red,green,blue, dl_na_teampos_list):
+def dl_na_formatter(player, red, green, blue, dl_na_teampos_list):
     column = int(player[0]) * 2
     converted_column = convertToColumn(column)
     playerpos = player[6]
@@ -286,6 +282,7 @@ def dl_na_formatter(player, red,green,blue, dl_na_teampos_list):
     
 parser = argparse.ArgumentParser()
 parser.add_argument("-r", "--reset", action="store_true")
+parser.add_argument('-m', '--useminors', action='store_true')
 args = parser.parse_args()    
         
 
@@ -362,9 +359,10 @@ for email in team_email_list:
 with tempinput(os.environ.get('dynasty_secret')) as tempfile:
     gc = pygsheets.authorize(service_file=tempfile)  
 
-sheet = gc.open('Hobochat Dynasty League Rosters')
+sheet = gc.open(os.environ.get('google_sheet_name'))
 wks = sheet.worksheet('title', 'Current Rosters')
-hidden_wks = sheet.worksheet('title', 'Hidden Sheet')
+if useminors:
+    hidden_wks = sheet.worksheet('title', 'Hidden Sheet')
 
 
 if args.reset:
@@ -380,7 +378,11 @@ wks.update_values(crange = teamrange, values = [teamfill])
 wks.update_values(crange = emailrange, values = [emailfill])
 gc.sheet.batch_update(sheet.id, mergelist)
 
-position_column = ['C','1B','2B','3B','SS','OF','Util','SP', 'RP','MiLB']
+if useminors:
+    position_column = ['C','1B','2B','3B','SS','OF','Util','SP', 'RP','MiLB']
+else:
+    position_column = ['C','1B','2B','3B','SS','OF','Util','SP', 'RP']
+    
 position_column_list = [position_column]
 
 if args.reset:
@@ -453,7 +455,8 @@ starter_list = []
 
 updated_playerlist = []
 
-minor_league_fillins = hidden_wks.cell('A26').value
+if useminors:
+    minor_league_fillins = hidden_wks.cell('A26').value
 for player in playerlist:    
     playername = player[2]
     if playername not in minor_league_fillins:
@@ -465,8 +468,6 @@ for player in playerlist:
             dl_list.append(player)
         if player[5] == 'NA':
             na_list.append(player)
-
-print (na_list)
 
  
 flatlist = [item for sublist in updated_playerlist for item in sublist]
@@ -520,12 +521,13 @@ for id in team_idlist:
                 json = dl_na_json[teampos]
                 gc.sheet.batch_update(sheet.id, json)
                 time.sleep(1.1)
-            if position == 'MiLB':
-                mcol = convertToColumn(int(id))
-                mcell = mcol + str(2)           
-                content = hidden_wks.cell(mcell).value
-                time.sleep(1)
-                wks.update_value(cell, content)
+            if useminors:
+                if position == 'MiLB':
+                    mcol = convertToColumn(int(id))
+                    mcell = mcol + str(2)           
+                    content = hidden_wks.cell(mcell).value
+                    time.sleep(1)
+                    wks.update_value(cell, content)
                 
 
 
