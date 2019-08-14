@@ -498,7 +498,7 @@ dl_na_teampos = []
 for player in dl_list:
     dl_na_formatter(player, 1, 0, 0, dl_na_teampos)
 
-print(na_list)
+
 for player in na_list:
     dl_na_formatter(player, 0, 0, 1, dl_na_teampos)
     
@@ -518,6 +518,7 @@ for id in team_idlist:
                 wks.update_value(cell, content)
                 time.sleep(1.1)
             if teampos in set(dl_na_teampos):
+                print (teampos)
                 json = dl_na_json[teampos]
                 gc.sheet.batch_update(sheet.id, json)
                 time.sleep(1.1)
