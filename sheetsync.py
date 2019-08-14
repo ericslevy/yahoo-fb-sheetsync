@@ -498,7 +498,7 @@ dl_na_teampos = []
 for player in dl_list:
     dl_na_formatter(player, 1, 0, 0, dl_na_teampos)
 
-
+print(na_list)
 for player in na_list:
     dl_na_formatter(player, 0, 0, 1, dl_na_teampos)
     
