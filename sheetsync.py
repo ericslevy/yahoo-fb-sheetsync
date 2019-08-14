@@ -515,12 +515,12 @@ for id in team_idlist:
             teampos = str(id+position)
             if position is not 'MiLB': 
                 content = teamposcells[teampos]
+                if teampos == '8C':
+                    print(content)
                 wks.update_value(cell, content)
                 time.sleep(1.1)
             if teampos in set(dl_na_teampos):
                 json = dl_na_json[teampos]
-                print (teampos)
-                print (json)
                 gc.sheet.batch_update(sheet.id, json)
                 time.sleep(1.1)
             if args.useminors:
