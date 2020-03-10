@@ -539,8 +539,9 @@ for id in team_idlist:
                 gc.sheet.batch_update(sheet.id, json)
                 #time.sleep(1.1)
             else:       
-                json = clear_formatter(column_id, row)
-                gc.sheet.batch_update(sheet.id, json)
+                if len(content) != 0:
+                    teamjson = clear_formatter(column_id, row)
+                    gc.sheet.batch_update(sheet.id, json)
             if args.useminors:
                 if position == 'MiLB':
                     mcol = convertToColumn(int(id))
