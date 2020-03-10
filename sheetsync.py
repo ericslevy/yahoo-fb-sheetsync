@@ -522,7 +522,8 @@ for player in na_list:
 wks.unlink()       
 for id in team_idlist:
         for position in position_column:      
-            column = convertToColumn(int(id) * 2)
+            column_id = int(id) * 2
+            column = convertToColumn(column_id)
             row = (position_column.index(position) + 4)
             cell = column + str(row)         
             teampos = str(id+position)
@@ -535,7 +536,7 @@ for id in team_idlist:
                 gc.sheet.batch_update(sheet.id, json)
                 #time.sleep(1.1)
             else:       
-                json = clear_formatter(column, row)
+                json = clear_formatter(column_id, row)
                 gc.sheet.batch_update(sheet.id, json)
             if args.useminors:
                 if position == 'MiLB':
