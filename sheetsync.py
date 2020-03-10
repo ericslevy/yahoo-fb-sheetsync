@@ -274,28 +274,31 @@ def dl_na_formatter(player, red, green, blue, dl_na_teampos_list):
     dl_na_teampos.append(teampos)
 
 def clear_formatter(column, row):        
-    clear_json = ({"repeatCell": {
-                        "range": {
-                          "sheetId": wks.id,
-                          "startRowIndex": row -1, 
-                          "endRowIndex": row, 
-                          "startColumnIndex": column - 1,
-                          "endColumnIndex": column
-                        },
-                      "cell": {
-                        "textFormat": {                 
-                            "format": {
-                              "foregroundColor": {
-                                "red": 0,
-                                "green": 0,
-                                "blue": 0
-                            },                   
-                    }
-                                                  }
-            },
-            "fields": "textFormat"
-        },
-        })
+    clear_json = {
+                            "repeatCell": {
+                                "range": {
+                                  "sheetId": wks.id,
+                                  "startRowIndex": row -1, 
+                                  "endRowIndex": row, 
+                                  "startColumnIndex": column - 1,
+                                  "endColumnIndex": column
+                                },
+                              "cell": {
+                                "textFormatRuns": [
+                                    {"startIndex": 0,
+                                    "format": {
+                                      "foregroundColor": {
+                                        "red": 0,
+                                        "green": 0,
+                                        "blue": 0
+                                    },
+                                }
+                            }
+                                                          ]
+                    },
+                    "fields": "textFormatRuns"
+                },
+                }
     return clear_json
     
 parser = argparse.ArgumentParser()
