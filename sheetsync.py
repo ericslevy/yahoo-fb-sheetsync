@@ -38,8 +38,9 @@ class YahooFantasyAPI:
         return r
         
 
-    def getSession(self):
+    def getSession(self):       
         data = os.environ.get('oauth2_file')
+        print('Data= :' +data)
         with tempinput(data) as tempfilename:   
             oauth = OAuth2(None, None, from_file=tempfilename)
 
@@ -455,13 +456,13 @@ if args.reset:
                 
                 
     gc.sheet.batch_update(sheet.id, header_json)
-    wks.unlink()
+
     for i in range(1, len(teamfill),2):
         col = convertToColumn(i)       
         pos_range = col + '4:' + col + str((3+len(position_column)))
         wks.update_values(crange = pos_range, values = position_column_list, extend=True, majordim = 'COLUMNS')
-        #time.sleep(1.5)       
-    wks.link()    
+        time.sleep(1.5)       
+  
        
     graylist = []        
     for id in team_idlist:
@@ -493,12 +494,11 @@ for player in playerlist:
 
  
 flatlist = [item for sublist in updated_playerlist for item in sublist]
-wks.unlink()
+
 for team in team_idlist:
     count = flatlist.count(team)
     col = convertToColumn(int(team)*2)
     wks.update_value(col + '3', 'MLB: ' + str(count) + '/25')
-wks.link()    
     
 for id in team_idlist:
     for position in position_column:
@@ -522,7 +522,7 @@ for player in dl_list:
 for player in na_list:
     dl_na_formatter(player, 0, 0, 1, dl_na_teampos)
     
-wks.unlink()       
+      
 for id in team_idlist:
         for position in position_column:      
             column_id = int(id) * 2
@@ -533,23 +533,29 @@ for id in team_idlist:
             if position is not 'MiLB': 
                 content = teamposcells[teampos]
                 wks.update_value(cell, content)
-                #time.sleep(1.1)
+                time.sleep(1.1)
             if teampos in set(dl_na_teampos):
                 json = dl_na_json[teampos]
                 gc.sheet.batch_update(sheet.id, json)
-                #time.sleep(1.1)
+                time.sleep(1.1)
             else:       
-                if len(content) != 0:
-                    teamjson = clear_formatter(column_id, row)
-                    gc.sheet.batch_update(sheet.id, json)
+                try:
+                    if len(content) != 0 and position is not 'MiLB':
+                        json = clear_formatter(column_id, row)
+                        gc.sheet.batch_update(sheet.id, json)
+                        time.sleep(1.1)
+                except HttpError:
+                    print('ERROR: ' + json)
+                    pass
+                    
             if args.useminors:
                 if position == 'MiLB':
                     mcol = convertToColumn(int(id))
                     mcell = mcol + str(2)           
                     content = hidden_wks.cell(mcell).value
-                    #time.sleep(1)
+                    time.sleep(1)
                     wks.update_value(cell, content)  
-wks.link()                    
+               
         
 fixed_resize_list = []
 for id in team_idlist:
