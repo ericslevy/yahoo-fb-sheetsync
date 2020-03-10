@@ -274,8 +274,7 @@ def dl_na_formatter(player, red, green, blue, dl_na_teampos_list):
     dl_na_teampos.append(teampos)
 
 def clear_formatter(column, row):        
-    clear_json = {
-                    "repeatCell": {
+    clear_json = ({"repeatCell": {
                         "range": {
                           "sheetId": wks.id,
                           "startRowIndex": row -1, 
@@ -284,7 +283,7 @@ def clear_formatter(column, row):
                           "endColumnIndex": column
                         },
                       "cell": {
-                        "textFormat": [                       
+                        "textFormat": {                 
                             "format": {
                               "foregroundColor": {
                                 "red": 0,
@@ -292,11 +291,11 @@ def clear_formatter(column, row):
                                 "blue": 0
                             },                   
                     }
-                                                  ]
+                                                  }
             },
             "fields": "textFormat"
         },
-        }
+        })
     return clear_json
     
 parser = argparse.ArgumentParser()
