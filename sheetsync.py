@@ -277,10 +277,10 @@ def clear_formatter(column, row):
     clear_json = ({"repeatCell": {
                         "range": {
                           "sheetId": wks.id,
-                          "startRowIndex": row -1, 
-                          "endRowIndex": row, 
-                          "startColumnIndex": column - 1,
-                          "endColumnIndex": column
+                          "startRowIndex": int(row) -1, 
+                          "endRowIndex": int(row), 
+                          "startColumnIndex": int(column) - 1,
+                          "endColumnIndex": int(column)
                         },
                       "cell": {
                         "textFormat": {                 
