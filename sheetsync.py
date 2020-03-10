@@ -274,7 +274,7 @@ def dl_na_formatter(player, red, green, blue, dl_na_teampos_list):
     dl_na_teampos.append(teampos)
 
 def clear_formatter(column, row):        
-    clear_json = {
+    clear_json = ({
                             "repeatCell": {
                                 "range": {
                                   "sheetId": wks.id,
@@ -298,7 +298,7 @@ def clear_formatter(column, row):
                     },
                     "fields": "textFormatRuns"
                 },
-                }
+                })
     return clear_json
     
 parser = argparse.ArgumentParser()
