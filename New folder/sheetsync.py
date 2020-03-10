@@ -271,33 +271,8 @@ def dl_na_formatter(player, red, green, blue, dl_na_teampos_list):
                                 }
                        }    
         dl_na_json[teampos][0]['repeatCell']['cell']['textFormatRuns'].append(dl_na_json_object)
-    dl_na_teampos.append(teampos)
-
-def clear_formatter(column, row):        
-    clear_json = {
-                    "repeatCell": {
-                        "range": {
-                          "sheetId": wks.id,
-                          "startRowIndex": row -1, 
-                          "endRowIndex": row, 
-                          "startColumnIndex": column - 1,
-                          "endColumnIndex": column
-                        },
-                      "cell": {
-                        "textFormat": [                       
-                            "format": {
-                              "foregroundColor": {
-                                "red": 0,
-                                "green": 0,
-                                "blue": 0
-                            },                   
-                    }
-                                                  ]
-            },
-            "fields": "textFormat"
-        },
-        }
-    return clear_json
+    dl_na_teampos.append(teampos)   
+    
     
 parser = argparse.ArgumentParser()
 parser.add_argument("-r", "--reset", action="store_true")
@@ -458,14 +433,13 @@ if args.reset:
         col = convertToColumn(i)       
         pos_range = col + '4:' + col + str((3+len(position_column)))
         wks.update_values(crange = pos_range, values = position_column_list, extend=True, majordim = 'COLUMNS')
-        #time.sleep(1.5)       
     wks.link()    
        
     graylist = []        
     for id in team_idlist:
         grayblock = grayformat(wks.id, int(id), len(position_column))
         graylist.append(grayblock)
-    gc.sheet.batch_update(sheet.id, graylist)    
+    gc.sheet.batch_update(sheet.id, graylist)   
      
 teamposcells = defaultdict(list)
 dl_list = []
@@ -519,8 +493,7 @@ for player in dl_list:
 
 for player in na_list:
     dl_na_formatter(player, 0, 0, 1, dl_na_teampos)
-    
-wks.unlink()       
+       
 for id in team_idlist:
         for position in position_column:      
             column = convertToColumn(int(id) * 2)
@@ -529,23 +502,23 @@ for id in team_idlist:
             teampos = str(id+position)
             if position is not 'MiLB': 
                 content = teamposcells[teampos]
+                if teampos == '8C':
+                    print(content)
                 wks.update_value(cell, content)
-                #time.sleep(1.1)
+                time.sleep(1.1)
             if teampos in set(dl_na_teampos):
                 json = dl_na_json[teampos]
                 gc.sheet.batch_update(sheet.id, json)
-                #time.sleep(1.1)
-            else:       
-                json = clear_formatter(row, cell)
-                gc.sheet.batch_update(sheet.id, json)
+                time.sleep(1.1)
+            else:
+                
             if args.useminors:
                 if position == 'MiLB':
                     mcol = convertToColumn(int(id))
                     mcell = mcol + str(2)           
                     content = hidden_wks.cell(mcell).value
-                    #time.sleep(1)
-                    wks.update_value(cell, content)  
-wks.link()                    
+                    time.sleep(1)
+                    wks.update_value(cell, content)              
         
 fixed_resize_list = []
 for id in team_idlist:
@@ -568,7 +541,12 @@ for id in team_idlist:
     fixed_resize_list.append(resize_request)
 
 gc.sheet.batch_update(sheet.id,fixed_resize_list)
-          
+    
+
+
+
+
+        
 auto_resize_list = []
 for id in team_idlist:
     startcol = ((int(id)-1) * 2) + 1
