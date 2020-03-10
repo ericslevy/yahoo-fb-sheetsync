@@ -277,10 +277,10 @@ def clear_formatter(column, row):
     clear_json = ({"repeatCell": {
                         "range": {
                           "sheetId": wks.id,
-                          "startRowIndex": int(row) -1, 
-                          "endRowIndex": int(row), 
-                          "startColumnIndex": int(column) - 1,
-                          "endColumnIndex": int(column)
+                          "startRowIndex": row -1, 
+                          "endRowIndex": row, 
+                          "startColumnIndex": column - 1,
+                          "endColumnIndex": column
                         },
                       "cell": {
                         "textFormat": {                 
@@ -535,7 +535,7 @@ for id in team_idlist:
                 gc.sheet.batch_update(sheet.id, json)
                 #time.sleep(1.1)
             else:       
-                json = clear_formatter(row, cell)
+                json = clear_formatter(column, row)
                 gc.sheet.batch_update(sheet.id, json)
             if args.useminors:
                 if position == 'MiLB':
