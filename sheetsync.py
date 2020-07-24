@@ -343,7 +343,7 @@ for team in teams:
         if current_position in ['C','1B','2B','3B','SS','OF','SP', 'RP']:          
             eligible_position_list.append(current_position)
         for position in player['eligible_positions']['position']:                
-            if (position != current_position and position not in ['BN', 'DL', 'NA']) or position == 'Util':  
+            if (position != current_position and position not in ['BN', 'IL', 'NA']) or position == 'Util':  
                 eligible_position_list.append(position)
                 
                 
@@ -485,9 +485,9 @@ for player in playerlist:
     if playername not in minor_league_fillins:
         teamposcells[str(player[0] + player[6])].append(playername)        
         updated_playerlist.append(player)
-        if player[5] not in ('BN', 'DL', 'NA'):
+        if player[5] not in ('BN', 'IL', 'NA'):
             starter_list.append(player)
-        if player[5] == 'DL':
+        if player[5] == 'IL':
             dl_list.append(player)
         if player[5] == 'NA':
             na_list.append(player)
